@@ -12,11 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-  */
+ */
 package com.lamontd.lahmans.writer.neo4j.model.services;
 
 import com.lamontd.utils.transport.MappedTransportObjectConverter;
 import com.lamontd.utils.transport.MappedTransportObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class TransportObjectHandler {
             if (converter.canHandle(transportObject)) {
                 logger.debug("Using " + converter.getClass() + " to handle transport object of type " + transportObject.getObjectType());
                 converter.convertAndStore(transportObject);
+                if (StringUtils.isNotBlank(transportObject.getTransactionId())) {
+                    logger.info("Processed transaction " + transportObject.getTransactionId());
+                }
                 return;
             }
         }
